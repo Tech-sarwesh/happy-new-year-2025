@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy New Year!</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0d0d0d, #333333);
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            text-align: center;
+            transition: background 1s ease-in-out;
+        }
+        .noisy-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="black"/><circle cx="10" cy="10" r="1" fill="gray"/><circle cx="50" cy="50" r="1" fill="gray"/><circle cx="80" cy="20" r="1" fill="gray"/><circle cx="30" cy="70" r="1" fill="gray"/><circle cx="70" cy="80" r="1" fill="gray"/></svg>');
+            z-index: 0;
+            opacity: 0.2;
+        }
+        .container {
+            position: relative;
+            z-index: 2;
+        }
+        .countdown {
+            font-size: 2rem;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #ff4500;
+            animation: fadeIn 3s ease-in-out;
+        }
+        .greeting {
+            margin-top: 5%;
+            font-size: 4rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 3s ease-in-out;
+        }
+        .share-button {
+            margin-top: 30px;
+            padding: 15px 25px;
+            font-size: 1.5rem;
+            background: #ff4500;
+            border: none;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 69, 0, 0.6);
+            transition: transform 0.3s, background 0.3s;
+        }
+        .share-button:hover {
+            background: #e63900;
+            transform: scale(1.1);
+        }
+        .exam-message {
+            font-size: 2rem;
+            color: yellow;
+            margin-top: 20px;
+            animation: fadeInText 2s ease-in-out;
+            display: none;
+        }
+        .exam-countdown {
+            font-size: 1.5rem;
+            color: cyan;
+            margin-top: 10px;
+            display: none;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeInText {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: white;
+            font-size: 1em;
+            user-select: none;
+            pointer-events: none;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+        footer {
+            position: fixed;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="noisy-background"></div>
+    <div class="container">
+        <div class="countdown" id="countdown"></div>
+        <div class="greeting">🎉 Happy New Year 2025 to All MAKAUTians & BBITians! 🎉</div>
+        <button class="share-button" onclick="shareGreeting()">Click Here for a Gift</button>
+        <div class="exam-message" id="examMessage">3 tarik se exam hai na, chalo jaake padho! 📚</div>
+        <div class="exam-countdown" id="examCountdown"></div>
+    </div>
+    <canvas id="fireworks"></canvas>
+
+    <script>
+        // Countdown Timer
+        function updateCountdown() {
+            const now = new Date();
+            const newYear = new Date('January 1, 2025 00:00:00');
+            const diff = newYear - now;
+
+            if (diff <= 0) {
+                document.getElementById('countdown').textContent = "Happy New Year!";
+                clearInterval(countdownInterval);
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').textContent = `${days}d ${hours}h ${minutes}m ${seconds}s left until 2025!`;
+        }
+
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Exam Countdown Timer
+        function updateExamCountdown() {
+            const now = new Date();
+            const examDate = new Date('January 3, 2025 22:00:00');
+            const diff = examDate - now;
+
+            if (diff <= 0) {
+                document.getElementById('examCountdown').textContent = "Exam Time! Best of luck!";
+                clearInterval(examCountdownInterval);
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('examCountdown').textContent = `Exam in: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        let examCountdownInterval;
+
+        // Fireworks Effect
+        const canvas = document.getElementById('fireworks');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        function createFirework() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            for (let i = 0; i < 100; i++) {
+                particles.push({
+                    x,
+                    y,
+                    vx: Math.random() * 4 - 2,
+                    vy: Math.random() * 4 - 2,
+                    alpha: 1,
+                    color: `hsl(${Math.random() * 360}, 100%, 50%)`
+                });
+            }
+        }
+
+        function drawFireworks() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                ctx.globalAlpha = p.alpha;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+                ctx.fill();
+                p.x += p.vx;
+                p.y += p.vy;
+                p.alpha -= 0.02;
+
+                if (p.alpha <= 0) {
+                    particles.splice(i, 1);
+                    i--;
+                }
+            }
+        }
+
+        function loop() {
+            if (Math.random() < 0.05) createFirework();
+            drawFireworks();
+            requestAnimationFrame(loop);
+        }
+
+        loop();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Share Greeting Function
+        function shareGreeting() {
+            document.body.style.background = 'black';
+            document.querySelector('.container').style.animation = 'shake 1s';
+            setTimeout(() => {
+                document.querySelector('.container').style.animation = '';
+            }, 1000);
+
+            document.getElementById('examMessage').style.display = 'block';
+            document.getElementById('examCountdown').style.display = 'block';
+            examCountdownInterval = setInterval(updateExamCountdown, 1000);
+            updateExamCountdown();
+        }
+
+        // Snowfall Effect
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.textContent = '❄';
+            snowflake.style.left = Math.random() * window.innerWidth + 'px';
+            snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+            document.body.appendChild(snowflake);
+
+            setTimeout(() => {
+                snowflake.remove();
+            }, 5000);
+        }
+
+        setInterval(createSnowflake, 100);
+    </script>
+
+    <footer>
+        Created by Tech Sarwesh
+    </footer>
+</body>
+</html>
